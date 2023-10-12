@@ -32,4 +32,4 @@ The following discussion is just only focus on WiFi.
 
 ## V. Ardupilot / Pixhawk
 
-Final working code is [gopro-fc.py](https://github.com/ttakao/gopro-fc/gopro-fc.py)
+Final working code is [gopro-fc.py](https://github.com/ttakao/gopro-fc/blob/main/gopro-fc.py)
