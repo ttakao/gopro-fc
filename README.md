@@ -83,12 +83,11 @@ After finishing these process, you need reboot.
 You will find wlan0 and wlan1 
 
 To erase wlan0 (on board wifi) you make the following file.
-
-filename: /etc/modprobe.d/raspi-blacklist.conf
->#wifi
->blacklist brcmfmac
->blacklist brcmutil
-
+~~~/etc/modprobe.d/raspi-blacklist.conf
+#wifi
+blacklist brcmfmac
+blacklist brcmutil
+~~~
 And reboot.
 
 Now you use USB WiFi dongle.
