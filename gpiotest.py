@@ -7,7 +7,7 @@ from time import sleep
 TESTIO = 26
 
 def main():
-    GPIO.setmode(GPIO.BCM) #ピン番号指定
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(TESTIO, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
     GPIO.add_event_detect(TESTIO, GPIO.RISING, 

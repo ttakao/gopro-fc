@@ -218,12 +218,22 @@ If you set all following above specifications. GPIO issue pulse when shutter is 
 ### Raspberry PI GPIO
 We transfer Pixhawk signal to Raspberry pi GPIO.
 This time, I choose GPIO26.
-You can see GPIO pins number or specification on !()[http://pinout.xyz/]
+You can see GPIO pins number or specification on [http://pinout.xyz/]
 
 IO pin and GND should be connected like this.
 [](/images/fc_raspi_con.jpg)
 
+The connection test is using 
+[gpiotest3.py](https://github.com/ttakao/gopro-fc/blob/main/gpiotest3.py) program.
 
-[gpiotest3.py](https://github.com/ttakao/gopro-fc/blob/main/gpiotest3.py) is 
+THis program is watching GPIO26(TESTIO). If GPIO voltage is high, the interruption is brought up and 'callback1' routine is called.
 
-Final working code is [gopro-fc.py](https://github.com/ttakao/gopro-fc/blob/main/gopro-fc.py)
+## VI. Pixhawk - Raspberry PI - GoPro
+
+Finally, the system is built.
+you can try final code [gopro-fc.py](https://github.com/ttakao/gopro-fc/blob/main/gopro-fc.py)
+
+THis program generate another thread for sending KeepAlive signal to GoPro. If you don't send GoPro signal, GoPro might be go down sleep.
+If you start this program, first of all mode is changed into Camera and wait for Flight Controller signal.
+You can try Transmitter switch (6) or 'Shutter Trigger' in connected Mission Planner.
+GoPro camera shutter is triggered.
