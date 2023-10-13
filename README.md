@@ -83,6 +83,7 @@ After finishing these process, you need reboot.
 You will find wlan0 and wlan1 
 
 To erase wlan0 (on board wifi) you make the following file.
+
 filename: /etc/modprobe.d/raspi-blacklist.conf
 ~~~
 #wifi
@@ -93,8 +94,136 @@ And reboot.
 
 Now you use USB WiFi dongle.
 
-## IV. Raspberry Pi
+## III. Open GoPro
+GoPro has API interface from 2021.
+It's called [Open GoPro](https://gopro.github.io/OpenGoPro/)
+
+When you use GoPro Wifi, first of all you start and connect QUIK from your smartphone and push "Preview" button. QUIK shows the window connect to GoPro with Access Point.
+You can get AP name and password from "Camera info" in "connect" menu.
+The most important thing is GoPro is Access Point. The Raspberry Pi should be client.
+Then you prepare GoPro AP in the Raspberry Pi.
+
+### Open GoPro installation
+pip is required.
+~~~
+sudo apt -y install python3-pip
+~~~
+And install
+~~~
+pip install open-gopro
+~~~
+
+### Before setting WiFi
+Maybe you connect your Raspberry PI to your home WiFi router.
+The following steps connect your Raspberry pi to GoPro.
+You need to change WiFi connection.
+It means if you use SSH usually, it cannot be used.
+There are two solutions.
+One way is preparing physical HDMI display and wireless keyboard.
+Another way is using Ethernet adapter. If your Windows or Mac does not have Ethernet connector, you can prepare USB-Ethernet connector. It is relatively cheap and some connector supports Mac environment and Windows one.
+
+I am using Ether net connector and both side IP address are static like 192.168.300.x. Setting is easy and you can find the way anywhere.
+
+
+
+### WiFi setting in Raspberry Pi
+Please check contents in 
+
+/etc/wpa_supplicant/wpa_supplicant.conf
+
+if you setup SSH, you will see the definition of current WiFi access point name.
+Anyway you add
+~~~
+network={
+    ssid="Gopro Access Point Name"
+    psk="password"
+}
+~~~
+
+Reboot is required.
+After reboot finished, you can test wpa_cli command.
+wpa_cli has rich functions, but now we just only test list and set AP.
+When you want to list AP
+~~~
+wpa_cli -i wlan- list_networks
+~~~
+
+if you choose AP you want to connect
+~~~
+wpa_cli -i wlan- select_network x
+~~~
+x is the list number.
+
+Of course this command can change connection, but if choosing AP can use or not is other discussion.
+After changing AP connection, please wait a few minutes.
+Check 'ifconfig' command if your Raspi is assigned ip address or not.
+GoPro will give you 10.5.5.x local ip address.
+
+## IV. Python test
+Try following simple program.
+~~~
+import requests
+import time
+import json
+
+GOPRO_BASE_URL = "http://10.5.5.9:8080/"
+cmd = GOPRO_BASE_URL+"/gopro/camera/presets/set_group?id=1001"
+response = requests.get(cmd,timeout=10)
+response_raise_for_status()
+resp = response.json()
+print( json.dumps(resp))
+~~~
+THis command make gopro enter into camera mode.
+When run this program and GoPro makes some noise.
+Maybe OK.
 
 ## V. Ardupilot / Pixhawk
+Now we set up Ardupilot.
+For sending shutter signal. You need to change parameter
+~~~
+CAM_TRIGG_TYPE=1
+~~~
+THis is in other words "Relay mode"
+
+### AUX OUT
+WHich pins should be shutter ?
+Usually, AUX OUT 5 or AUX OUT 6 are chosen.
+
+[](/images/pixhawk_pins.jpg)
+
+These are SERVO13 or SERVO14.
+I choose AUX OUT5.
+Then parameter set as 
+~~~
+RELAY_PIN=54
+~~~
+And Servo13 should be GPIO
+~~~
+SERVO13_FUNCTION=-1
+~~~
+Finally don't forget "Write parameters"
+
+You can change shutter push duration.
+But we will pick up GPIO voltage up edge, duration is not so important.
+
+FInally set Transmitter switch
+~~~
+RC6_OPTION=9
+~~~
+9 means Camera Trigger.
+
+If you set all following above specifications. GPIO issue pulse when shutter is requested.
+[](/images/shutter.jpg)
+
+### Raspberry PI GPIO
+We transfer Pixhawk signal to Raspberry pi GPIO.
+This time, I choose GPIO26.
+You can see GPIO pins number or specification on !()[http://pinout.xyz/]
+
+IO pin and GND should be connected like this.
+[](/images/fc_raspi_con.jpg)
+
+
+[gpiotest3.py](https://github.com/ttakao/gopro-fc/blob/main/gpiotest3.py) is 
 
 Final working code is [gopro-fc.py](https://github.com/ttakao/gopro-fc/blob/main/gopro-fc.py)
