@@ -25,6 +25,8 @@ When thinking under the water environment, we can use great GoPro protection cas
 The following discussion is just only focus on WiFi.
 
 ## II. WiFi
+What we want to do is like this illustration.
+![](/images/camera_raspi.png)
 
 ## III. Antenna
 
