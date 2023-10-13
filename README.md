@@ -48,6 +48,8 @@ Wifi 2.5GHz wave length is about 12 cm. Then the antenna length should be 6cm (1
 Now strip off approx. 3cm.
 ![](/images/antenna2.jpg)
 
+I put glue and cover by heat shrink tube for water resistant.
+
 ### USB device Driver
 THe following process is supported by Raspbian OS **64bit**
 
@@ -83,10 +85,10 @@ You will find wlan0 and wlan1
 To erase wlan0 (on board wifi) you make the following file.
 
 filename: /etc/modprobe.d/raspi-blacklist.conf
-‘‘‘#wifi
-blacklist brcmfmac
-blacklist brcmutil
-‘‘‘
+>#wifi
+>blacklist brcmfmac
+>blacklist brcmutil
+
 And reboot.
 
 Now you use USB WiFi dongle.
