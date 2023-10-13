@@ -26,9 +26,70 @@ The following discussion is just only focus on WiFi.
 
 ## II. WiFi
 What we want to do is like this illustration.
+{: align="center"}
 ![](/images/camera_raspi.png)
 
-## III. Antenna
+Usually, we say that radio waves cannot transmit through water.
+It is not strictly correct. radio waves decay rapidly in water.
+When you attach antenna closely GoPro, you can use wifi.
+
+### USB WiFi dongle and cable
+First of all, we must find WiFi USB dongle with antenna connector. Because it is very hard to add antenna on the Raspberry Pi board and that WiFi power is weak.
+I find USB WiFi dongle with screw antenna.
+And you find 1m coaxial cable with SMA-P connector.
+![](/images/cable.jpg)
+![](/images/wifi_dongle.jpg)
+
+Depending on cable connector, you may need gender change connector.
+
+### Antenna
+At the cable opposite side, make an antenna for wifi.
+Wifi 2.5GHz wave length is about 12 cm. Then the antenna length should be 6cm (1/2 wave length) or 3cm (1/4 wave length)
+Now strip off approx. 3cm.
+![](/images/antenna2.jpg)
+
+### USB device Driver
+THe following process is supported by Raspbian OS **64bit**
+
+First of all, just connect USB WiFi dongle and see 'ifconfig' or 'ip a' command response. If your WiFi dongle is recognized as 'wlanx'. You are so lucky. Raspbian OS has adequate device driver.
+If your WiFi dongle does not work, you need to install device driver.
+You enter the command 'lsusb', you can find connected device characteristics. In my case, that is "Realtek Semiconductor Corp. RTL88x2bu".
+
+Then I need to install RTL88x2bu device driver.
+(Unfortunately, I am not familiar with kernel compile. I introduce just only install scenario step by step)
+
+1. sudo apt update
+1. sudo apt upgrade
+
+1. sudo apt install git bc dkms raspberrypi-kernel-headers
+1. sudo apt update
+1. sudo reboot
+
+1. git clone https://github.com/cilynx/rtl88x2bu
+1. cd  rtl88x2bu/
+
+1. sed -i 's/I386_PC = y/I386_PC = n/' Makefile
+1. sed -i 's/ARM_RPI = n/ARM_RPI = y/' Makefile
+
+1. VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
+1. sudo rsync -rvhP ./ /usr/src/rtl88x2bu-${VER}
+1. sudo dkms add -m rtl88x2bu -v ${VER}
+1. sudo dkms build -m rtl88x2bu -v ${VER}
+1. sudo dkms install -m rtl88x2bu -v ${VER}
+
+After finishing these process, you need reboot.
+You will find wlan0 and wlan1 
+
+To erase wlan0 (on board wifi) you make the following file.
+
+filename: /etc/modprobe.d/raspi-blacklist.conf
+‘‘‘#wifi
+blacklist brcmfmac
+blacklist brcmutil
+‘‘‘
+And reboot.
+
+Now you use USB WiFi dongle.
 
 ## IV. Raspberry Pi
 
