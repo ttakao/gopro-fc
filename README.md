@@ -43,6 +43,12 @@ And you find 1m coaxial cable with SMA-P connector.
 Depending on cable connector, you may need gender change connector.
 
 ### Antenna
+<table>
+<tbody><tr><td>
+Note: If you use this system on air craft. You don't need to make Antenna. Maybe you can use Raspberry Pi on board WiFi.
+</td></tr></tbody>
+</table>
+
 At the cable opposite side, make an antenna for wifi.
 Wifi 2.5GHz wave length is about 12 cm. Then the antenna length should be 6cm (1/2 wave length) or 3cm (1/4 wave length)
 Now strip off approx. 3cm.
@@ -231,9 +237,34 @@ THis program is watching GPIO26(TESTIO). If GPIO voltage is high, the interrupti
 ## VI. Pixhawk - Raspberry PI - GoPro
 
 Finally, the system is built.
+
+### Antenna
+Fix the antenna on the GoPro.
+[](/images/antenna3.jpg)
+
+(This picture uses see through scotch tape for your understanding. Actually use water resistant tape.)
+
+### Python program
 you can try final code [gopro-fc.py](https://github.com/ttakao/gopro-fc/blob/main/gopro-fc.py)
 
 THis program generate another thread for sending KeepAlive signal to GoPro. If you don't send GoPro signal, GoPro might be go down sleep.
 If you start this program, first of all mode is changed into Camera and wait for Flight Controller signal.
 You can try Transmitter switch (6) or 'Shutter Trigger' in connected Mission Planner.
 GoPro camera shutter is triggered.
+
+### Start up procedure
+I put here a standard procedure for your understanding.
+
+1. -[ ] Power on Pixhawk and Raspberry PI.
+1. -[ ] Connect to Mission Planner (Maybe via telemetry)
+1. -[ ] Connect to Transmitter.
+1. -[ ] Connect ether-net cable between PC and Raspi.
+1. -[ ] Start up SSH with ether-net.
+1. -[ ] Make sure boat status.
+1. -[ ] Power on GoPro.
+1. -[ ] Connect to QUIK and push "Preview botton"
+1. -[ ] Connect to GoPro WiFi using wpa_cli command.
+1. -[ ] Check ifconfig if assgined ip address by GoPro
+1. -[ ] Start like gopro-fc.py script.
+1. -[ ] Set Gopro on the boat.
+1. -[ ] Start boat and run Survey mode on the Mission Planner.
