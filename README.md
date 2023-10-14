@@ -256,18 +256,18 @@ GoPro camera shutter is triggered.
 ### Start up procedure
 I put here a standard procedure for your understanding.
 
--[ ] Power on Pixhawk and Raspberry PI.
--[ ] Connect to Mission Planner (Maybe via telemetry)
--[ ] Connect to Transmitter.
--[ ] Connect ether-net cable between PC and Raspi.
--[ ] Start up SSH with ether-net.
--[ ] Make sure boat status.
--[ ] Power on GoPro.
--[ ] Connect to QUIK and push "Preview botton"
--[ ] Connect to GoPro WiFi using wpa_cli command.
--[ ] Check ifconfig if assgined ip address by GoPro
--[ ] Start like gopro-fc.py script.
--[ ] Set Gopro on the boat.
--[ ] Start boat and run Survey mode on the Mission Planner.
+- [ ] Power on Pixhawk and Raspberry PI.
+- [ ] Connect to Mission Planner (Maybe via telemetry)
+- [ ] Connect to Transmitter.
+- [ ] Connect ether-net cable between PC and Raspi.
+- [ ] Start up SSH with ether-net.
+- [ ] Make sure boat status.
+- [ ] Power on GoPro.
+- [ ] Connect to QUIK and push "Preview botton"
+- [ ] Connect to GoPro WiFi using wpa_cli command.
+- [ ] Check ifconfig if assgined ip address by GoPro
+- [ ] Start like gopro-fc.py script.
+- [ ] Set Gopro on the boat.
+- [ ] Start boat and run Survey mode on the Mission Planner.
 
 
