@@ -52,6 +52,7 @@ Note: If you use this system on air craft. You don't need to make Antenna. Maybe
 At the cable opposite side, make an antenna for wifi.
 Wifi 2.5GHz wave length is about 12 cm. Then the antenna length should be 6cm (1/2 wave length) or 3cm (1/4 wave length)
 Now strip off approx. 3cm.
+{: align="center"}
 ![](/images/antenna2.jpg)
 
 I put glue and cover by heat shrink tube for water resistant.
@@ -131,7 +132,6 @@ Another way is using Ethernet adapter. If your Windows or Mac does not have Ethe
 I am using Ether net connector and both side IP address are static like 192.168.300.x. Setting is easy and you can find the way anywhere.
 
 
-
 ### WiFi setting in Raspberry Pi
 Please check contents in 
 
@@ -195,7 +195,7 @@ THis is in other words "Relay mode"
 WHich pins should be shutter ?
 Usually, AUX OUT 5 or AUX OUT 6 are chosen.
 
-[](/images/pixhawk_pins.jpg)
+![](/images/pixhawk_pins.jpg)
 
 These are SERVO13 or SERVO14.
 I choose AUX OUT5.
@@ -219,7 +219,7 @@ RC6_OPTION=9
 9 means Camera Trigger.
 
 If you set all following above specifications. GPIO issue pulse when shutter is requested.
-[](/images/shutter.jpg)
+![](/images/shutter.jpg)
 
 ### Raspberry PI GPIO
 We transfer Pixhawk signal to Raspberry pi GPIO.
@@ -227,7 +227,7 @@ This time, I choose GPIO26.
 You can see GPIO pins number or specification on [http://pinout.xyz/]
 
 IO pin and GND should be connected like this.
-[](/images/fc_raspi_con.jpg)
+![](/images/fc_raspi_con.jpg)
 
 The connection test is using 
 [gpiotest3.py](https://github.com/ttakao/gopro-fc/blob/main/gpiotest3.py) program.
@@ -240,7 +240,8 @@ Finally, the system is built.
 
 ### Antenna
 Fix the antenna on the GoPro.
-[](/images/antenna3.jpg)
+
+![](/images/antenna3.jpg)
 
 (This picture uses see through scotch tape for your understanding. Actually use water resistant tape.)
 
@@ -255,16 +256,18 @@ GoPro camera shutter is triggered.
 ### Start up procedure
 I put here a standard procedure for your understanding.
 
-1. -[ ] Power on Pixhawk and Raspberry PI.
-1. -[ ] Connect to Mission Planner (Maybe via telemetry)
-1. -[ ] Connect to Transmitter.
-1. -[ ] Connect ether-net cable between PC and Raspi.
-1. -[ ] Start up SSH with ether-net.
-1. -[ ] Make sure boat status.
-1. -[ ] Power on GoPro.
-1. -[ ] Connect to QUIK and push "Preview botton"
-1. -[ ] Connect to GoPro WiFi using wpa_cli command.
-1. -[ ] Check ifconfig if assgined ip address by GoPro
-1. -[ ] Start like gopro-fc.py script.
-1. -[ ] Set Gopro on the boat.
-1. -[ ] Start boat and run Survey mode on the Mission Planner.
+-[ ] Power on Pixhawk and Raspberry PI.
+-[ ] Connect to Mission Planner (Maybe via telemetry)
+-[ ] Connect to Transmitter.
+-[ ] Connect ether-net cable between PC and Raspi.
+-[ ] Start up SSH with ether-net.
+-[ ] Make sure boat status.
+-[ ] Power on GoPro.
+-[ ] Connect to QUIK and push "Preview botton"
+-[ ] Connect to GoPro WiFi using wpa_cli command.
+-[ ] Check ifconfig if assgined ip address by GoPro
+-[ ] Start like gopro-fc.py script.
+-[ ] Set Gopro on the boat.
+-[ ] Start boat and run Survey mode on the Mission Planner.
+
+
