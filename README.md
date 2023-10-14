@@ -132,7 +132,7 @@ Another way is using Ethernet adapter. If your Windows or Mac does not have Ethe
 I am using Ether net connector and both side IP address are static like 192.168.300.x. Setting is easy and you can find the way anywhere.
 
 
-### WiFi setting in Raspberry Pi
+### WiFi setting on Raspberry Pi
 Please check contents in 
 
 /etc/wpa_supplicant/wpa_supplicant.conf
@@ -227,10 +227,11 @@ This time, I choose GPIO26.
 You can see GPIO pins number or specification on [http://pinout.xyz/]
 
 IO pin and GND should be connected like this.
+
 ![](/images/fc_raspi_con.jpg)
 
-The connection test is using 
-[gpiotest3.py](https://github.com/ttakao/gopro-fc/blob/main/gpiotest3.py) program.
+You can test the GPIO connection using 
+[gpiotest.py](https://github.com/ttakao/gopro-fc/blob/main/gpiotest.py) program.
 
 THis program is watching GPIO26(TESTIO). If GPIO voltage is high, the interruption is brought up and 'callback1' routine is called.
 
@@ -248,8 +249,10 @@ Fix the antenna on the GoPro.
 ### Python program
 you can try final code [gopro-fc.py](https://github.com/ttakao/gopro-fc/blob/main/gopro-fc.py)
 
-THis program generate another thread for sending KeepAlive signal to GoPro. If you don't send GoPro signal, GoPro might be go down sleep.
-If you start this program, first of all mode is changed into Camera and wait for Flight Controller signal.
+Needless to say, Python program runs on Raspberry Pi.
+
+THis program generate another thread for sending KeepAlive signal to GoPro. If you don't send GoPro signal, GoPro might be go down sleep. Sending frequency should be changed by your environment.
+When starting this program, GoPro mode is changed into Camera and wait for Flight Controller signal.
 You can try Transmitter switch (6) or 'Shutter Trigger' in connected Mission Planner.
 GoPro camera shutter is triggered.
 
