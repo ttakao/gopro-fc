@@ -273,4 +273,8 @@ I put here a standard procedure for your understanding.
 - [ ] Set Gopro on the boat.
 - [ ] Start boat and run Survey mode on the Mission Planner.
 
+## Fix camera on the boat
+I make a holder by brass for avoiding rust.
+![](/images/holder.png)
 
+Fix the boat !
