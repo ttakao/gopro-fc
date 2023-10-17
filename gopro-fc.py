@@ -30,8 +30,13 @@ def request_shutter(pin):
     # request_cmd("/gopro/camera/shutter/stop") # release
 
         response.raise_for_status()
-        resp = response.json()
-        print( json.dumps(resp) )
+
+        sleep(3)
+        
+        response = requests.get(GOPRO_BASE_URL
+                            + "/gopro/camera/shutter/stop",
+                            timeout=3)
+        resp=response.raise_for_status()
 
     else:
         pass
@@ -47,7 +52,7 @@ def request_alive(): # loop as ohter thread
 
         print("Keep Alive")
 
-        time.sleep(3)
+        time.sleep(30)
 
 if __name__ == '__main__':
     
