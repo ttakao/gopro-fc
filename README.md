@@ -263,7 +263,7 @@ I make a holder by brass for avoiding rust.
 
 Fix this one to the boat
 
-![](/images/antennna_tape.jpg)
+![](/images/bolt.jpg)
 
 THis is a sample picture.
 
