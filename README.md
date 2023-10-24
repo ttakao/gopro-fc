@@ -256,6 +256,17 @@ When starting this program, GoPro mode is changed into Camera and wait for Fligh
 You can try Transmitter switch (6) or 'Shutter Trigger' in connected Mission Planner.
 GoPro camera shutter is triggered.
 
+### How to fix GoPro, Antenna
+I make a holder by brass for avoiding rust.
+![](/images/holder.png)
+
+Fix this one to the boat
+![](/images/antennna_tape.jpg)
+
+
+THis is a sample picture.
+![](/images/underthesea.jpg)
+
 ### Start up procedure
 I put here a standard procedure for your understanding.
 
@@ -273,8 +284,3 @@ I put here a standard procedure for your understanding.
 - [ ] Set Gopro on the boat.
 - [ ] Start boat and run Survey mode on the Mission Planner.
 
-## Fix camera on the boat
-I make a holder by brass for avoiding rust.
-![](/images/holder.png)
-
-Fix the boat !
