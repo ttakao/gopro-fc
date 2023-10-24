@@ -258,13 +258,15 @@ GoPro camera shutter is triggered.
 
 ### How to fix GoPro, Antenna
 I make a holder by brass for avoiding rust.
+
 ![](/images/holder.png)
 
 Fix this one to the boat
+
 ![](/images/antennna_tape.jpg)
 
-
 THis is a sample picture.
+
 ![](/images/underthesea.jpg)
 
 ### Start up procedure
