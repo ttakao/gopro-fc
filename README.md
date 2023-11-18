@@ -286,3 +286,32 @@ I put here a standard procedure for your understanding.
 - [ ] Set Gopro on the boat.
 - [ ] Start boat and run Survey mode on the Mission Planner.
 
+# GoPro Camera Stand
+This chapter is just for me.
+I need to make sink Gopro under the sea.
+Then, I made four Axis Stand.
+
+## Parts
+- 4401 Stepper Motor x 4
+- GRBL CNC board V3 x 1
+- A4988 motor controller x 4
+- Motor rigid flange coupling x 4
+- Wire Reel (made by myself) x 4 
+- Arduino Uno R3 x 1
+- Razer distance sensor WT-VL53R-TTL x 1
+- long 4 core wire (TTL) x 1
+- long coaxial cable (for WiFi) x 1
+
+## Arduino Software
+This software is controlled using simple command by Raspberry PI
+Raspberry PI sends command "start" to Arduino, if the stand reaches objective depth, the stand send back "END ".
+Raspberry PI send shutter command to GOpro.
+A few seconds later, Raspberry PI sends command "rewind".
+After finish rewind, Raspi gets "end".
+Raspi can take a next picture.
+
+This mechanism has two sensors. One ic distance sensor, other one is wire limit detector (called Ball Sensor).
+
+Source code name is; boat_winch.ino
+
+
