@@ -8,7 +8,7 @@
  */
 #include <SoftwareSerial.h>
 
-#define DEBUG
+// #define DEBUG
 
 // Depth senser
 #define RX_PIN 9
@@ -57,9 +57,6 @@ void rotate(int count){
       digitalWrite(stepZPin, LOW);
       delay(pulseWidth);    
   }
-  #ifdef DEBUG
-    Serial.print("*");
-  #endif
 }
 
 void moveDown(){
@@ -163,7 +160,6 @@ boolean CheckBall(){
 } 
 
 void StartProcess(){
-  digitalWrite(enPin, LOW);
   if  (minDepth < Distance) {
     // go down
     // set direction
@@ -173,7 +169,6 @@ void StartProcess(){
       getDistance();
       
       if ( (Depth > Distance) & Dvalid){
-        digitalWrite(enPin, HIGH); // stop motor
         Serial.println("END RC=0");
         #ifdef DEBUG
           Serial.println("Distance Sensed");
@@ -183,9 +178,8 @@ void StartProcess(){
       }
       
       CheckBall();
-      
+      // end of wire    
       if ( BallSenseFlag == LOW ){ // sense low means detected ball.
-        digitalWrite(enPin, HIGH);
         Serial.println("END RC=1");
  
         #ifdef DEBUG
@@ -196,7 +190,7 @@ void StartProcess(){
       }
     } // end of while
   } // end of minDepth
-  digitalWrite(enPin, HIGH);
+
   Cmd = "";
 }
 
@@ -239,6 +233,9 @@ void setup() {
   // dSerial.begin(57600);
   dSerial.begin(115200);
   dSerial.flush();
+
+  digitalWrite(enPin, LOW); // allways enable
+
 
   Serial.println("Serial/SoftwareSerial Ready.");
 }
