@@ -303,8 +303,8 @@ Then, I made four Axis Stand.
 - long coaxial cable (for WiFi) x 1
 
 ## Arduino Software
-This software is controlled using simple command by Raspberry PI
-Raspberry PI sends command "start" to Arduino, if the stand reaches objective depth, the stand send back "END ".
+This software is controlled using simple command from Raspberry PI
+Raspberry PI sends command "start" to Arduino, if the stand reaches objective depth, the stand send back "end ".
 Raspberry PI send shutter command to GOpro.
 A few seconds later, Raspberry PI sends command "rewind".
 After finish rewind, Raspi gets "end".
@@ -314,4 +314,7 @@ This mechanism has two sensors. One ic distance sensor, other one is wire limit 
 
 Source code name is; boat_winch.ino
 
+### NEOSWSerial.h
 
+Usually, Software serial libaralies use all pin change interruption. But NEOSWSerial can co-exist with pin change interruption. But just one line code modification is needed.
+Detail is shown on the https://www.appsloveworld.com/arduinocode/10/using-softwareserial-library-with-enableinterrupt
