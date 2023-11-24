@@ -1,18 +1,18 @@
 /*
  * Arduino Camera platform driver
  * 
- * CAUTION：Do not choose PinChangeInterrupts.
- * That makes conflict withSoftwareserial
- *    
+ * CAUTION : NeoSWSerial.h is modified to accept GPIO interruption.
+ *      
  *   by Tsukasa Takao@Umineco ltd. 2023/11
  */
-#include <SoftwareSerial.h>
+#include <NeoSWSerial.h>
+#include <PinChangeInterrupt.h>
 
-// #define DEBUG
+#define DEBUG
 
 // Depth senser
-#define RX_PIN 9
-#define TX_PIN 10
+#define RXPin 9
+#define TXPin 10
 #define BUFFLEN 50
 int Distance;
 int Depth = 300; // mm 
@@ -21,9 +21,7 @@ boolean Dvalid = false; // If true, the distance data is reliable.
 
 // Ball sensor
 #define BallSensePin 11 // Motor senser pin
-#define BOUNCETIME 1000 // neglect ball sensor boucing 
-boolean BallSenseFlag = HIGH;
-unsigned long previousMillis = 0;
+volatile boolean BallSense = HIGH; // By program and Interruption Handler
 
 // CNC motor drive board
 const int stepXPin = 2; // X-axis step pin
@@ -39,7 +37,7 @@ const int enPin = 8; // spindle enable pin
 const int stepsPerRev = 200; // 200カウントで1回転
 int pulseWidth = 3; // microsecond パルス幅　テスト結果の最小値
 
-SoftwareSerial dSerial(RX_PIN, TX_PIN);
+NeoSWSerial dSerial(RXPin, TXPin);
 
 String Cmd; // コマンド
 #define START "start"
@@ -48,6 +46,11 @@ String Cmd; // コマンド
 // 1回転
 void rotate(int count){
   for (int i = 0; i < stepsPerRev*count; i++) {
+    
+      if (BallSense == LOW){ // By some reason, stop rotation !
+        break; 
+      }
+      
       digitalWrite(stepXPin, HIGH);
       digitalWrite(stepYPin, HIGH);
       digitalWrite(stepZPin, HIGH);
@@ -55,7 +58,8 @@ void rotate(int count){
       digitalWrite(stepXPin, LOW);
       digitalWrite(stepYPin, LOW);
       digitalWrite(stepZPin, LOW);
-      delay(pulseWidth);    
+      delay(pulseWidth); 
+
   }
 }
 
@@ -108,12 +112,12 @@ void getDistance(){
           sscanf(cStr, "d: %d\r\n", &Distance);
 
           #ifdef DEBUG
-           // Serial.print("State:");
-           // Serial.print(state);
-           // Serial.print("    Distance:");
-           // Serial.print(Distance);
-           // Serial.print(" mm");
-           // Serial.print("\r\n");
+            Serial.print("State:");
+            Serial.print(state);
+            Serial.print("    Distance:");
+            Serial.print(Distance);
+            Serial.print(" mm");
+            Serial.print("\r\n");
           #endif
           
           usCnt=0; // reset counter
@@ -130,11 +134,12 @@ void getDistance(){
 void getCmd(){
   // command process
   if (Serial.available() > 0){
+
     Cmd  = Serial.readString();
     Cmd.trim(); // remove blank, CR, LF
 
     int placeholder = Cmd.indexOf("=");
-    
+   
     if (placeholder != -1){
        // Depth command process
       String key = Cmd.substring(0,placeholder);
@@ -147,63 +152,78 @@ void getCmd(){
         Serial.println("Unknown command: "+ key);
       }
     }
+
+    #ifdef DEBUG
+      Serial.println(Cmd);
+    #endif
   }
 }
 
-boolean CheckBall(){
-  // Wire Sensor chack. Usually HIGH, if metal ball touched, LOW.
-  if ( (millis() - BOUNCETIME) > previousMillis ){
-    // valid change
-    BallSenseFlag = digitalRead(BallSensePin);
-  }
-  previousMillis = millis();
-} 
+void SWSerial_ISR(){
+   NeoSWSerial::rxISR( *portInputRegister( digitalPinToPort( RXPin ) ) );
+}
+void Ball_ISR(){
+    BallSense = LOW;
+}
 
 void StartProcess(){
-  if  (minDepth < Distance) {
-    // go down
-    // set direction
-    moveDown();
-    while (1){
-      rotate(2);
-      getDistance();
+  // too short depth, do nothing.
+  if  (minDepth > Distance) {
+    return;
+  }
+
+  #ifdef DEBUG
+    Serial.println("START Proecess start");
+  #endif
+  // go down
+  moveDown();
+  // before loop, reset ball sensor
+  BallSense = HIGH;
+  while (1){
+    rotate(2);
+    if (BallSense == LOW){ // if stopped by sense 
+      Serial.println("END RC=1");
+      break;
+    }
+    getDistance();
       
-      if ( (Depth > Distance) & Dvalid){
-        Serial.println("END RC=0");
-        #ifdef DEBUG
-          Serial.println("Distance Sensed");
-        #endif
-        
-        break;
-      }
+    if ( (Depth > Distance) & Dvalid){
+      Serial.println("END RC=0");
       
-      CheckBall();
-      // end of wire    
-      if ( BallSenseFlag == LOW ){ // sense low means detected ball.
-        Serial.println("END RC=1");
- 
-        #ifdef DEBUG
-          Serial.println("Ball Sensed");
-        #endif
+      #ifdef DEBUG
+        Serial.println("Distance Sensed");
+      #endif
         
-        break;
-      }
-    } // end of while
-  } // end of minDepth
+      break;
+    }
+  } // end of while
 
   Cmd = "";
 }
 
 void RewindProcess(){
+  #ifdef DEBUG
+    Serial.println("REWIND Proecess start");
+  #endif
+
   moveUp();
-
+  // before loop, reset ball sense
+  BallSense = HIGH;
+  
   while (1){
-    rotate(1);
+    
+    rotate(3);
+    
+    if (BallSense == LOW ){
+      Serial.println("END RC=1");
 
-    CheckBall();
-    if (BallSenseFlag == LOW ){
-      Serial.println("END RC=0");
       break;    
+    }
+    // minimum depth 
+    getDistance();
+    if ( (minDepth > Distance) & Dvalid){
+      Serial.println("END RC=0");
+      break;
     }
   }
   Cmd = "";
@@ -212,7 +232,7 @@ void RewindProcess(){
 void setup() {
 
   // Sensor setup
-  pinMode(BallSensePin, INPUT_PULLUP);
+  pinMode(BallSensePin, INPUT_PULLUP); // always HIGH except detected.
   
   // Motor setup
   pinMode(stepXPin, OUTPUT);
@@ -228,16 +248,16 @@ void setup() {
   delay(200);
   
   // dSerial.begin(9600);
-  // dSerial.begin(19200);
+  dSerial.begin(19200);
   // dSerial.begin(38400);
-  // dSerial.begin(57600);
-  dSerial.begin(115200);
   dSerial.flush();
 
+  attachPCINT(digitalPinToPCINT( RXPin) , SWSerial_ISR, CHANGE);
+  attachPCINT(digitalPinToPCINT(BallSensePin), Ball_ISR, FALLING);
+  
   digitalWrite(enPin, LOW); // allways enable
 
-
-  Serial.println("Serial/SoftwareSerial Ready.");
+  Serial.println("Serial/NeoSWSerial Ready.");
 }
 
 void loop(){
