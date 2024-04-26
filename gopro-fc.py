@@ -11,35 +11,36 @@
    Therefore this program has infinite loop
    
    10/12/2023 First Edition. By Tsukasa Takao
+   4/23/2024  Second Edition. GPIO->gpiozero
 """
 
 import requests
 import time
 import json
 import threading
-import RPi.GPIO as GPIO
+from gpiozero import Button 
 
 SIGNAL_PORT = 26
 GOPRO_BASE_URL = "http://10.5.5.9:8080/"
 
-def request_shutter(pin):
-    if pin == SIGNAL_PORT:
-        response = requests.get(GOPRO_BASE_URL
+def request_shutter():
+
+    print("Shutter requested")
+
+    response = requests.get(GOPRO_BASE_URL
                             +"/gopro/camera/shutter/start",
                             timeout=3)
     # request_cmd("/gopro/camera/shutter/stop") # release
 
-        response.raise_for_status()
+    response.raise_for_status()
 
-        sleep(3)
-        
-        response = requests.get(GOPRO_BASE_URL
+    time.sleep(3)
+
+    response = requests.get(GOPRO_BASE_URL
                             + "/gopro/camera/shutter/stop",
                             timeout=3)
-        resp=response.raise_for_status()
+    resp=response.raise_for_status()
 
-    else:
-        pass
 
 def request_alive(): # loop as ohter thread
 
@@ -55,10 +56,6 @@ def request_alive(): # loop as ohter thread
         time.sleep(30)
 
 if __name__ == '__main__':
-    
-    # Setup 
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(SIGNAL_PORT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
     # Try photo mode.
     response = requests.get(GOPRO_BASE_URL+
@@ -67,17 +64,17 @@ if __name__ == '__main__':
     # request_cmd("/gopro/camera/shutter/stop") # release
     # if not good, throw error.
     response.raise_for_status()
-    
-    # OK. generate keep alive thread
+
+    # GPIO event listner
+    button = Button(SIGNAL_PORT, pull_up=False)
+    button.when_pressed = request_shutter
+
+    # Generate keep alive thread
     thread_A = threading.Thread(target=request_alive)
     thread_A.start()
-    
-    # GPIO event listner
-    GPIO.add_event_detect(SIGNAL_PORT,GPIO.RISING,
-        callback=request_shutter, bouncetime=300)
-    
+
     # Loop
     while True:
-        sleep(10)
+        time.sleep(10)
 
     thread_A.join() # wait until thread_A
