@@ -14,8 +14,8 @@
 #define RXPin 9
 #define TXPin 10
 #define BUFFLEN 50
-int Distance;
-int Depth = 300; // mm 
+int Distance; // mm
+int Depth = 2000; // mm 
 int minDepth = 500; // Don't work under 50cm
 boolean Dvalid = false; // If true, the distance data is reliable.
 
@@ -40,6 +40,7 @@ int pulseWidth = 3; // microsecond パルス幅　テスト結果の最小値
 NeoSWSerial dSerial(RXPin, TXPin);
 
 String Cmd; // コマンド
+#define DEPTH "depth="
 #define START "start"
 #define REWIND "rewind"
 
@@ -144,7 +145,7 @@ void getCmd(){
        // Depth command process
       String key = Cmd.substring(0,placeholder);
       String value = Cmd.substring(placeholder+1);
-      if ( key == "depth" ){
+      if ( key == DEPTH ){
         Depth = value.toInt();
 
         Serial.println( "Depth changed to " +  value);
