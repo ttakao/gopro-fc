@@ -3,7 +3,7 @@
  * 
  * CAUTION : NeoSWSerial.h is modified to accept GPIO interruption.
  *      
- *   by Tsukasa Takao@Umineco ltd. 2023/11
+ *   by Tsukasa Takao@Umineco ltd. 2023/11, 2024/6
  */
 #include <NeoSWSerial.h>
 #include <PinChangeInterrupt.h>
@@ -42,6 +42,7 @@ NeoSWSerial dSerial(RXPin, TXPin);
 String Cmd; // コマンド
 #define DEPTH "depth="
 #define START "start"
+#define STOP "stop"
 #define REWIND "rewind"
 
 // 1回転
@@ -132,31 +133,17 @@ void getDistance(){
 }
 
 
-void getCmd(){
-  // command process
-  if (Serial.available() > 0){
+void getDepth(){
+  // Depth command process
+  String key = Cmd.substring(0,placeholder);
+  String value = Cmd.substring(placeholder+1);
+  
+  if ( key == DEPTH ){
+    Depth = value.toInt();
 
-    Cmd  = Serial.readString();
-    Cmd.trim(); // remove blank, CR, LF
-
-    int placeholder = Cmd.indexOf("=");
-   
-    if (placeholder != -1){
-       // Depth command process
-      String key = Cmd.substring(0,placeholder);
-      String value = Cmd.substring(placeholder+1);
-      if ( key == DEPTH ){
-        Depth = value.toInt();
-
-        Serial.println( "Depth changed to " +  value);
-      } else {
-        Serial.println("Unknown command: "+ key);
-      }
-    }
-
-    #ifdef DEBUG
-      Serial.println(Cmd);
-    #endif
+    Serial.println( "Depth changed to " +  value);
+  } else {
+    Serial.println("Unknown command: "+ key);
   }
 }
 
@@ -186,6 +173,12 @@ void StartProcess(){
       Serial.println("END RC=1");
       break;
     }
+
+    if (Cmd == STOP){
+      Serial.println("END RC=1");
+      break;
+    }
+
     getDistance();
       
     if ( (Depth > Distance) & Dvalid){
@@ -199,7 +192,6 @@ void StartProcess(){
     }
   } // end of while
 
-  Cmd = "";
 }
 
 void RewindProcess(){
@@ -216,7 +208,7 @@ void RewindProcess(){
     rotate(3);
     
     if (BallSense == LOW ){
-      Serial.println("END RC=1");
+      Serial.println("END RC=0");
 
       break;    
     }
@@ -227,7 +219,6 @@ void RewindProcess(){
       break;
     }
   }
-  Cmd = "";
 }
 
 void setup() {
@@ -262,12 +253,23 @@ void setup() {
 }
 
 void loop(){
-  
-  getCmd();
+    // command process
+  if (Serial.available() > 0){
+
+    Cmd  = Serial.readString();
+    Cmd.trim(); // remove blank, CR, LF
+
+    if (Cmd.indexOf("=") != -1){    
+      getDepth();
+    }
+    #ifdef DEBUG
+      Serial.println(Cmd);
+    #endif
+  }
 
   getDistance();
  
-  // command process
+  // command process, but stop is emergency.
   if (Cmd == START){
     #ifdef DEBUG
     Serial.println("Start !");
@@ -279,5 +281,8 @@ void loop(){
     #endif
     RewindProcess();
   }
+  // done command.
+  Cmd = "";
+
     
 } // end loop
