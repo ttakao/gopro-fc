@@ -247,7 +247,7 @@ Fix the antenna on the GoPro.
 
 ### Python program
 you can try final code [gopro-fc.py](https://github.com/ttakao/gopro-fc/blob/main/gopro-fc.py)
-
+This program required gps.py in this repository.
 Needless to say, Python program runs on Raspberry Pi.
 
 THis program generate another thread for sending KeepAlive signal to GoPro. If you don't send GoPro signal, GoPro might be go down sleep. Sending frequency should be changed by your environment.
