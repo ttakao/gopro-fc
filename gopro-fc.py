@@ -5,10 +5,12 @@ import json
 import jmespath
 import threading
 import gps
+from gpiozero import Button
+
     """_summary_ This program runs on Raspberry pi.
     Watching GPIO 26. if short, start shutter process.
     """
-
+SIGNAL_PORT = 26
 GOPRO_BASE_URL = "http://10.5.5.9:8080/"
 
 from logging import getLogger
@@ -102,3 +104,16 @@ def request_alive(): # loop as ohter thread
         log.info("Keep Alive")
 
         time.sleep(30)
+        
+if __name__ == '__main__':
+　　init()
+
+    # GPIO event listner
+    button = Button(SIGNAL_PORT, pull_up=False)
+    button.when_pressed = shutter_process
+
+    # Loop
+    while True:
+        time.sleep(10)
+
+    thread_A.join() # wait until thread_A
