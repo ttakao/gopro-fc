@@ -5,9 +5,9 @@
  I am making some drone boats.
  As usual drone users, I also want to take pictures on the boat.
  I think GoPro camera is very popular.
- But I have never seen using Gopro on the drone boat.
+ But I have never seen using Gopro on drone boats.
  Then I make a solution. 
- Building this system is not easy for me. Then I'd like to share my experiences with Ardupilot folks.
+ Building this system is not easy for me. Then I'd like to share my experiences with Ardupilot folks for you.
 
  ## Basic concept
  Please see following high level chart.
@@ -285,3 +285,14 @@ I put here a standard procedure for your understanding.
 - [ ] Set Gopro on the boat.
 - [ ] Start boat and run Survey mode on the Mission Planner.
 
+### Preview function
+On the sea, we would like to check picture we will take. Then I make Python CGI.
+Assumption is that you have already installed lighttpd as tiny Web Server.
+What I customized is just only the document root location.
+There are two files.
+[preview.py](https://github.com/ttakao/gopro-fc/blob/main/preview.py)
+[preview.html](https://github.com/ttakao/gopro-fc/blob/main/preview.html)
+
+preview.py should be located on cgi-bin folder.
+
+Good Luck !

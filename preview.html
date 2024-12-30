@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GoPro Snap shot</title>
+</head>
+<body>
+<h1>Gopro Snap Shot</h1>
+
+<img src="./snapshot.jpg" width="500">
+
+<form action="./cgi-bin/preview.py">
+    <input type="hidden" id="currentURL" name="currentURL" value="dynamic" />
+    <input type="submit" value="リフレッシュ">
+
+</form>
+</body>
+<script>
+    let passv = document.getElementById("currentURL") 
+    passv.value =  location.host + location.pathname
+</script>
+</html>
