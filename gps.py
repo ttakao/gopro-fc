@@ -11,7 +11,8 @@ def getlocation():
     lat = vehicle.location.global_frame.lat
     lon = vehicle.location.global_frame.lon
     alt = vehicle.location.global_frame.alt
-    log.info("location: lat="+str(lat)+" lon="+str(lon)+ " alt="+str(alt))
+    heading = vechicle.heading
+    log.info(f"location: lat={lat} lon={lon} alt={alt} head={heading}")
     vehicle.close()
     
     return(lat, lon, alt)
@@ -21,5 +22,6 @@ if __name__ == "__main__":
     print(x[0])
     print(x[1])
     print(x[2])
+    print(x[3])
 
   
