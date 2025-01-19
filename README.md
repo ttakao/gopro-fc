@@ -295,4 +295,23 @@ There are two files.
 
 preview.py should be located on cgi-bin folder.
 
+## Post Process
+When I started this project, I thought someone has already developed the photos tiling like a map.
+You can find a topic called "3D Mapping" on the ardupilot.org.
+But none of those software worked as my expected.
+Because all 3D mapping softwares try to find features in a single photo.
+The map is created by overlapping those features.
+This algorithm probably won't work if you take photos of the desert.
+The ocean floor has few features. All the photos look similar.
+The water depth is also case-by-case. The camera's field of view changes depending on the water depth.
+There is another problem. Google services have a limit to how much you can enlarge. You cannot enlarge an area of ​​several tens of meters square to about half the size of the display.
+Therefore, I develop a software using the leaflet package of Javascript. This program overlay photos as GPS attributes.
+
+The result is shown like this.
+![](/images/map.png)
+The necessary programs are stored in the "map" folder.
+This program has very specific conditions set. It is not very versatile.
+However, if you look closely at the functions, you should be able to use them for your purposes.
+
+
 Good Luck !
