@@ -8,7 +8,7 @@ let img_width = 10;  // メートル
 let img_height = 8;  // メートル
 
 let img_path = ''
-let map = null // Global object
+let map ; // Global object
 let idx_array = []
 
 // implicit setup
@@ -146,7 +146,10 @@ function calculateRotatedImageBounds(centerLat, centerLon, direction, width, hei
 function map_init(lat, lon){
     // lat = 38.3995807  // temporary
     // lon = 141.4103738 // temporary
+    if ((typeof map) == 'object'){ return; }
+    
     map = L.map('maparea',{zoomControl: false})
+    console.log("map object generated.")
     //地図の中心とズームレベルを指定
     map.setView([lat, lon], 18)
     //表示するタイルレイヤのURLとAttributionコントロールの記述を設定して、地図に追加する
